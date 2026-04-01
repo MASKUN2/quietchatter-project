@@ -4,3 +4,6 @@
 [submodule "microservice-user"]
 	path = microservice-user
 	url = https://github.com/MASKUN2/quietchatter-microservice-user.git
+[submodule "infrastructure"]
+	path = infrastructure
+	url = ./infrastructure
