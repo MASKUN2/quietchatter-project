@@ -1,0 +1,6 @@
+[submodule "micro-service-book"]
+	path = microservice-book
+	url = ./micro-service-book
+[submodule "micro-service-user"]
+	path = microservice-user
+	url = ./micro-service-user
