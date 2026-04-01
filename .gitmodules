@@ -1,6 +1,6 @@
-[submodule "micro-service-book"]
+[submodule "microservice-book"]
 	path = microservice-book
-	url = ./micro-service-book
-[submodule "micro-service-user"]
+	url = https://github.com/MASKUN2/microservice-book.git
+[submodule "microservice-user"]
 	path = microservice-user
-	url = ./micro-service-user
+	url = https://github.com/MASKUN2/microservice-user.git
