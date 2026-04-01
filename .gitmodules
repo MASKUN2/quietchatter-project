@@ -6,4 +6,4 @@
 	url = https://github.com/MASKUN2/quietchatter-microservice-user.git
 [submodule "infrastructure"]
 	path = infrastructure
-	url = ./infrastructure
+	url = https://github.com/MASKUN2/quietchatter-infrastructure.git
