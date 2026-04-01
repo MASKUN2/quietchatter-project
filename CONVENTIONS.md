@@ -1,6 +1,6 @@
 # 프로젝트 네이밍 규칙 (Project Naming Conventions)
 
-이 문서는 `quiet-chatter-project` 저장소 내의 폴더 및 프로젝트 명명 규칙을 정의합니다.
+이 문서는 `quietchatter-project` 저장소 내의 폴더 및 프로젝트 명명 규칙을 정의합니다.
 
 ## 마이크로서비스 폴더 명명 규칙
 
