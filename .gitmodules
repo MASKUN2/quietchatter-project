@@ -1,9 +1,9 @@
 [submodule "microservice-book"]
 	path = microservice-book
 	url = https://github.com/MASKUN2/quietchatter-microservice-book.git
-[submodule "microservice-user"]
-	path = microservice-user
-	url = https://github.com/MASKUN2/quietchatter-microservice-user.git
+[submodule "microservice-member"]
+	path = microservice-member
+	url = https://github.com/MASKUN2/quietchatter-microservice-member.git
 [submodule "infrastructure"]
 	path = infrastructure
 	url = https://github.com/MASKUN2/quietchatter-infrastructure.git
