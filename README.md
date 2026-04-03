@@ -35,6 +35,16 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 └── microservice-user/       # 사용자 관련 마이크로서비스 (서브모듈)
 ```
 
+## 개발 지침 및 문서 (Documentation)
+
+AI 에이전트 및 개발자를 위한 주요 설계 가이드와 개발 규약 문서입니다. 작업을 시작하기 전 다음 문서들을 참고하십시오.
+
+- [전체 프로젝트 개발 규약 (CONVENTIONS.md)](docs/CONVENTIONS.md)
+- [아키텍처 비전 및 지향점 (ARCHITECTURE_VISION.md)](docs/ARCHITECTURE_VISION.md)
+- [백엔드 설계 원칙 (BACKEND_DESIGN.md)](docs/BACKEND_DESIGN.md)
+- [스프링 부트 메모리 최적화 가이드 (spring-boot-memory-optimization-guide.md)](docs/spring-boot-memory-optimization-guide.md)
+- [최근 작업 및 변경 이력 요약 (LAST_WORK_SUMMARY.md)](docs/LAST_WORK_SUMMARY.md)
+
 ## 시작하기 (Infrastructure)
 
 ### 사전 준비
