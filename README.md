@@ -1,5 +1,7 @@
 # QuietChatter Project
 
+AI 에이전트를 위한 지침은 AGENTS.md 파일을 참고하십시오.
+
 quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율적이고 안전한 채팅 서비스 인프라 및 애플리케이션 프로젝트입니다.
 
 ## 인프라 아키텍처 (Infrastructure)
@@ -9,41 +11,44 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 ### 주요 구성 요소
 - Network: VPC 내 퍼블릭/프라이빗 서브넷 분리 (ap-northeast-2)
 - NAT & Ingress Node: EC2 기반 NAT 구성 및 NGINX Ingress Docker 운영 (비용 절감형)
-- API Gateway Node: Docker 기반 API Gateway 운영 (향후 Spring Cloud Gateway 도입 예정)
+- API Gateway: Spring Cloud Gateway 기반 microservice-gateway 운영 (JWT 검증 및 라우팅)
 - Persistence Node: 
-  - Docker Compose 기반 관리: PostgreSQL 16, Redis 7, Redpanda (Kafka 호환)
+  - Docker Compose 기반 관리: PostgreSQL 16, Redis 7, Redpanda (Kafka 호환), Consul Server
   - EBS 데이터 분리: 15GB 독립 EBS 볼륨을 /data에 마운트하여 인스턴스 재생성 시에도 데이터 안전 보장
-- Microservices: 향후 ASG(Auto Scaling Group)와 스팟 인스턴스를 활용한 비용 절감형 노드 구성 예정
+- Microservices: 
+  - 서비스 검색: 각 노드에 배치된 Consul Client Agent를 통해 서비스 탐색 및 헬스 체크 수행
+  - 포트 설정: 모든 서비스는 컨테이너 내부 포트 8080을 기본으로 사용하며, Consul을 통해 동적으로 탐색됨
+  - 인스턴스: 향후 ASG(Auto Scaling Group)와 스팟 인스턴스를 활용한 비용 절감형 노드 구성 예정
 
 ## 기술 스택
 
 - IaC: Terraform (HCL)
 - Container: Docker, Docker Compose
+- Discovery: HashiCorp Consul (Agent-based Architecture)
 - OS: Amazon Linux 2023 (ARM64, t4g series)
 - Database: PostgreSQL, Redis
 - Messaging: Redpanda
-- Framework: Spring Boot (예정), Spring Cloud (예정)
+- Framework: Spring Boot 3.5.13, Spring Cloud 2025.x
 
 ## 프로젝트 구조
 
 ```text
 .
 ├── infrastructure/          # 테라폼 기반 인프라 정의 (IaC)
-│   ├── docker-compose.*.yaml # 노드별 서비스 구성 파일
-│   └── *.tf                  # AWS 리소스 정의
-├── microservice-book/       # 도서 관련 마이크로서비스 (서브모듈)
-└── microservice-user/       # 사용자 관련 마이크로서비스 (서브모듈)
+├── microservice-gateway/    # Spring Cloud Gateway (라우팅 및 보안)
+├── microservice-member/     # 회원 및 인증 마이크로서비스
+├── microservice-book/       # 도서 정보 마이크로서비스
+├── microservice-talk/       # 북톡 및 반응 마이크로서비스
+├── microservice-customer/   # 고객 지원 마이크로서비스
 ```
 
 ## 개발 지침 및 문서 (Documentation)
 
-AI 에이전트 및 개발자를 위한 주요 설계 가이드와 개발 규약 문서입니다. 작업을 시작하기 전 다음 문서들을 참고하십시오.
+AI 에이전트 및 개발자를 위한 핵심 가이드 문서입니다. 작업을 시작하기 전 반드시 숙지하십시오.
 
-- [전체 프로젝트 개발 규약 (CONVENTIONS.md)](docs/CONVENTIONS.md)
-- [아키텍처 비전 및 지향점 (ARCHITECTURE_VISION.md)](docs/ARCHITECTURE_VISION.md)
-- [백엔드 설계 원칙 (BACKEND_DESIGN.md)](docs/BACKEND_DESIGN.md)
-- [스프링 부트 메모리 최적화 가이드 (spring-boot-memory-optimization-guide.md)](docs/spring-boot-memory-optimization-guide.md)
-- [최근 작업 및 변경 이력 요약 (LAST_WORK_SUMMARY.md)](docs/LAST_WORK_SUMMARY.md)
+- [아키텍처 가이드 (ARCHITECTURE.md)](docs/ARCHITECTURE.md): 프로젝트 비전, 설계 원칙, 서비스 구성.
+- [개발 지침 가이드 (DEVELOPMENT.md)](docs/DEVELOPMENT.md): 코딩 표준, 기술 설정, EDA, 최적화 규칙.
+- [프로젝트 이력 (HISTORY.md)](docs/HISTORY.md): 최근 작업 요약 및 변경 이력.
 
 ## 시작하기 (Infrastructure)
 
