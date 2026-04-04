@@ -1,0 +1,48 @@
+server:
+  port: 8084
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: microservice-batch
+  
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/microservice-batch}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:localhost}
+      port: 8500
+      discovery:
+        service-name: microservice-batch
+        instance-id: ${spring.application.name}:${server.port}
+
+app:
+  loki:
+    url: ${LOKI_URL:http://localhost:3100}
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL:}
+
+# Spring AI configuration
+spring.ai.openai.api-key: ${OPENAI_API_KEY:placeholder}
+spring.ai.openai.chat.options.model: gpt-4o-mini
