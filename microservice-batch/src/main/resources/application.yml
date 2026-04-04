@@ -42,6 +42,17 @@ app:
     url: ${LOKI_URL:http://localhost:3100}
   discord:
     webhook-url: ${DISCORD_WEBHOOK_URL:}
+  datasource:
+    talk:
+      jdbc-url: ${TALK_DB_URL:jdbc:postgresql://localhost:5432/microservice-talk}
+      username: ${DB_USERNAME:postgres}
+      password: ${DB_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
+    book:
+      jdbc-url: ${BOOK_DB_URL:jdbc:postgresql://localhost:5432/microservice-book}
+      username: ${DB_USERNAME:postgres}
+      password: ${DB_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
 
 # Spring AI configuration
 spring.ai.openai.api-key: ${OPENAI_API_KEY:placeholder}

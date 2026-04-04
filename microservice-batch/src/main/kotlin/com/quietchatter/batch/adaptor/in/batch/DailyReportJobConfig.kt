@@ -2,8 +2,6 @@ package com.quietchatter.batch.adaptor.`in`.batch
 
 import com.quietchatter.batch.adaptor.out.discord.DiscordClient
 import com.quietchatter.batch.adaptor.out.loki.LokiClient
-import com.quietchatter.batch.adaptor.out.service.BookServiceClient
-import com.quietchatter.batch.adaptor.out.service.TalkServiceClient
 import org.slf4j.LoggerFactory
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.batch.core.Job
@@ -12,12 +10,15 @@ import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
 import org.springframework.batch.repeat.RepeatStatus
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.transaction.PlatformTransactionManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Configuration
 class DailyReportJobConfig(
@@ -26,8 +27,8 @@ class DailyReportJobConfig(
     private val lokiClient: LokiClient,
     private val discordClient: DiscordClient,
     private val chatModel: ChatModel,
-    private val talkServiceClient: TalkServiceClient,
-    private val bookServiceClient: BookServiceClient
+    @Qualifier("talkJdbcTemplate") private val talkJdbcTemplate: JdbcTemplate,
+    @Qualifier("bookJdbcTemplate") private val bookJdbcTemplate: JdbcTemplate
 ) {
     private val log = LoggerFactory.getLogger(DailyReportJobConfig::class.java)
 
@@ -76,16 +77,22 @@ class DailyReportJobConfig(
 
     private fun appendReactionStats(stats: StringBuilder, start: LocalDateTime, end: LocalDateTime) {
         try {
-            val counts = talkServiceClient.getReactionStats(start, end)
+            val sql = "SELECT type, COUNT(*) as count FROM reaction WHERE created_at BETWEEN ? AND ? GROUP BY type"
+            val rows = talkJdbcTemplate.queryForList(sql, start, end)
+            
             stats.append("- 일간 리액션: ")
-            if (counts.isEmpty()) {
+            if (rows.isEmpty()) {
                 stats.append("없음\n")
                 return
             }
-            counts.forEach { (type, count) -> stats.append("$type($count) ") }
+            rows.forEach { row ->
+                val type = row["type"]
+                val count = row["count"]
+                stats.append("$type($count) ")
+            }
             stats.append("\n")
         } catch (e: Exception) {
-            log.error("Failed to fetch reaction stats", e)
+            log.error("Failed to fetch reaction stats from DB", e)
             stats.append("- 일간 리액션: 조회 실패\n")
         }
     }
@@ -98,8 +105,19 @@ class DailyReportJobConfig(
         }
         
         try {
-            val bookIds = bookViews.keys.toList()
-            val idToTitle = bookServiceClient.getBookTitles(bookIds)
+            val bookIds = bookViews.keys.map { UUID.fromString(it) }
+            if (bookIds.isEmpty()) {
+                stats.append("  없음\n")
+                return
+            }
+
+            val inSql = StringJoiner(",", "(", ")")
+            bookIds.forEach { _ -> inSql.add("?") }
+            val sql = "SELECT id, title FROM book WHERE id IN $inSql"
+            
+            val idToTitle = bookJdbcTemplate.query(sql, { rs, _ ->
+                rs.getString("id") to rs.getString("title")
+            }, *bookIds.toTypedArray()).toMap()
             
             bookViews.entries.sortedByDescending { it.value }
                 .take(5)
@@ -108,7 +126,7 @@ class DailyReportJobConfig(
                     stats.append("  - \"$title\" (${count}회)\n")
                 }
         } catch (e: Exception) {
-            log.error("Failed to fetch book titles", e)
+            log.error("Failed to fetch book titles from DB", e)
             stats.append("  - 책 정보 조회 실패\n")
         }
     }
