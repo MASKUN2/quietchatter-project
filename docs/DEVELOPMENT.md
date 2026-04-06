@@ -54,9 +54,14 @@
 - 각 서비스는 독립된 노드 또는 컨테이너 환경에서 실행됨을 전제로 합니다.
 
 ### 5.2 메모리 및 성능 최적화
-- 가상 스레드: `spring.threads.virtual.enabled: true` 설정을 통해 I/O 효율을 높입니다.
+- 가상 스레드: spring.threads.virtual.enabled: true 설정을 통해 I/O 효율을 높입니다.
 - JVM 튜닝: 저사양 인프라를 고려하여 SerialGC를 사용하고 힙 메모리를 엄격히 제한합니다.
-- 연결 제한: 톰캣의 `max-connections`와 `accept-count`를 보수적으로 설정하여 급격한 메모리 폭증을 방지합니다.
+- 연결 제한: 톰캣의 max-connections와 accept-count를 보수적으로 설정하여 급격한 메모리 폭증을 방지합니다.
+
+### 5.3 인프라 계층 및 실행 (Infrastructure Layering)
+- 계층 구조: 인프라는 01-base(기초), 02-network-services(연결), 03-platform(플랫폼), 04-apps-gateway(진입점), 05-apps-microservices(앱) 순으로 실행합니다.
+- 정적 IP 관리: 계층 간 순환 의존성을 제거하기 위해 Control Plane(10.0.101.100)과 API Gateway(10.0.101.200)는 정적 프라이빗 IP를 사용합니다.
+- 상태 참조: 하위 계층은 상위 계층의 리소스 정보를 terraform_remote_state를 통해 참조하며, 직접적인 리소스 중복 정의를 금지합니다.
 
 ## 6. API 문서화 (RestDocs & OpenAPI)
 
