@@ -1,2 +1,5 @@
 .DS_Store
 docs/api-spec/
+microservice-batch/.gradle/
+microservice-batch/bin/
+microservice-batch/build/
