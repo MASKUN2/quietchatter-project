@@ -28,3 +28,6 @@
 [submodule "microservice-customer"]
 	path = microservice-customer
 	url = https://github.com/MASKUN2/quietchatter-microservice-customer
+[submodule "microservice-frontend"]
+	path = microservice-frontend
+	url = https://github.com/MASKUN2/quietchatter-microservice-frontend.git
