@@ -52,13 +52,13 @@
 ## 5. 인프라 및 최적화
 
 ### 5.1 포트 및 실행 환경
-- 모든 마이크로서비스는 컨테이너 내부 기본 포트 8080을 사용합니다.
+- 백엔드 마이크로서비스: 모든 마이크로서비스는 컨테이너 내부 기본 포트 8080을 사용합니다.
+- 프론트엔드 및 BFF: Next.js 기반 서비스는 컨테이너 내부 기본 포트 3000을 사용합니다.
 - 각 서비스는 독립된 노드 또는 컨테이너 환경에서 실행됨을 전제로 합니다.
 
-### 5.2 메모리 및 성능 최적화
-- 가상 스레드: spring.threads.virtual.enabled: true 설정을 통해 I/O 효율을 높입니다.
-- JVM 튜닝: 저사양 인프라를 고려하여 SerialGC를 사용하고 힙 메모리를 엄격히 제한합니다.
-- 연결 제한: 톰캣의 max-connections와 accept-count를 보수적으로 설정하여 급격한 메모리 폭증을 방지합니다.
+### 5.2 기술 스택별 표준
+- Backend: Kotlin Idiomatic 코드를 지향하며, 가상 스레드를 적극 활용합니다.
+- Frontend: Next.js 15 App Router 표준을 따르며, 클라이언트와 서버 컴포넌트의 역할을 명확히 분리합니다. UI는 MUI v6와 Tailwind CSS를 조합하여 일관된 디자인 시스템을 유지합니다.
 
 ### 5.3 인프라 계층 및 실행 (Infrastructure Layering)
 - 계층 구조: 인프라는 01-base(기초), 02-network-services(연결), 03-platform(플랫폼), 04-apps-gateway(진입점), 05-apps-microservices(앱) 순으로 실행합니다.

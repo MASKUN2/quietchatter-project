@@ -11,7 +11,8 @@
 도메인별 응집도와 배포의 독립성을 고려하여 다음과 같이 서비스를 구성하며, 각 서비스는 독립된 Git 서브모듈 저장소로 관리합니다.
 
 ### 2.1 마이크로서비스 (Microservices)
-- microservice-gateway: 모든 요청의 단일 진입점. Spring Cloud Gateway 기반의 라우팅 및 통합 보안(JWT 검증) 처리.
+- microservice-frontend: 사용자 진입점(Entry Point). Next.js 15 기반의 웹 프론트엔드이자 BFF(Backend for Frontend) 역할을 수행하며, 세션 관리 및 API 프록시 기능을 담당합니다.
+- microservice-gateway: 내부망 라우팅의 단일 진입점. Spring Cloud Gateway 기반의 라우팅 및 통합 보안(JWT 검증) 처리.
 - microservice-member: 회원 가입, 인증/인가(OAuth), 프로필 및 권한 관리.
 - microservice-book: 외부 도서 API 연동 및 책 정보 캐싱.
 - microservice-talk: 회원 간 대화, 반응(좋아요 등) 처리 및 비즈니스 자동화.

@@ -28,13 +28,15 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 - OS: Amazon Linux 2023 (ARM64, t4g series)
 - Database: PostgreSQL, Redis
 - Messaging: Redpanda
-- Framework: Spring Boot 3.5.13, Spring Cloud 2025.x
+- Backend: Spring Boot 3.5.13, Spring Cloud 2025.x
+- Frontend & BFF: Next.js 15, MUI v6, TypeScript, jose (JWT)
 
 ## 프로젝트 구조
 
 ```text
 .
 ├── infrastructure/          # 테라폼 기반 인프라 정의 (IaC)
+├── microservice-frontend/   # Next.js 15 기반 웹 프론트엔드 및 BFF
 ├── microservice-gateway/    # Spring Cloud Gateway (라우팅 및 보안)
 ├── microservice-member/     # 회원 및 인증 마이크로서비스
 ├── microservice-book/       # 도서 정보 마이크로서비스
