@@ -5,28 +5,29 @@ Next.js 15 기반의 새로운 프론트엔드 BFF(Backend for Frontend)인 micr
 
 ## 2. 수행 작업 내용
 
-### 2.1 Next.js 15 프로젝트 초기화
-- 프로젝트 생성: App Router와 TypeScript를 사용하는 Next.js 15 프로젝트를 microservice-frontend 디렉토리에 구축하였습니다.
-- 라이브러리 도입: JWT 서명 및 검증을 위해 jose 라이브러리를 설치하였습니다.
-- 환경 설정: 로컬 개발 및 런타임을 위한 .env.local.example 파일을 생성하고 standalone 빌드 모드를 활성화하였습니다.
+### 2.1 Next.js 15 프로젝트 초기화 및 UI 마이그레이션
+- 프로젝트 구축: App Router와 TypeScript를 사용하는 Next.js 15 프로젝트를 microservice-frontend 디렉토리에 구축하고 레거시 UI를 완벽히 이관하였습니다.
+- MUI v6 환경 설정: ThemeRegistry 및 EmotionCache를 구현하여 Next.js App Router 환경에서 Material UI v6가 정상 동작하도록 설정하였습니다.
+- 라이브러리 도입: JWT 서명 및 검증을 위해 jose 라이브러리를 설치하고, API 통신을 위해 axios 및 react-router-dom(호환용)을 설치하였습니다.
 
 ### 2.2 세션 관리 및 인증 아키텍처 구현
 - JWT 세션 시스템: HS256 알고리즘 기반의 JWT 발급 및 검증 로직을 src/lib/session.ts에 구현하였습니다. 세션은 qc_session 명칭의 httpOnly 쿠키로 관리됩니다.
 - 네이버 OAuth2 연동: 로그인 시작, 콜백 수신 및 CSRF 방지용 state 검증 로직을 포함한 인증 라우트를 구현하였습니다.
-- 미들웨어 보호: 인증이 필요한 경로(/my/*) 접근 시 세션을 검증하고 미인증 사용자를 로그인 페이지로 자동 유도하는 middleware.ts를 작성하였습니다.
+- SSR 및 CSR 최적화: localStorage 접근 시 윈도우 객체 존재 여부를 체크하도록 수정하고, useSearchParams 사용 시 Suspense 바운더리를 적용하여 빌드 안정성을 확보하였습니다.
 
-### 2.3 API 프록시 및 게이트웨이 연동
+### 2.3 API 프록시 및 라우팅 이관
 - 통합 프록시 라우트: 브라우저의 요청을 받아 세션에서 memberId를 추출하고, 이를 X-Member-Id 헤더에 주입하여 내부 API Gateway로 전달하는 프록시 로직을 구현하였습니다.
-- 게이트웨이 클라이언트: 내부 네트워크의 API Gateway와 통신을 담당하는 공통 fetch 래퍼 모듈을 작성하였습니다.
+- 라우팅 구조 변경: React Router DOM 기반의 라우팅을 Next.js 파일 시스템 기반 라우팅(src/app)으로 전면 개편하였습니다.
+- 링크 및 네비게이션 최적화: react-router-dom의 Link 및 useNavigate를 Next.js의 Link 및 useRouter/usePathname으로 교체하여 프레임워크 최적화를 완료하였습니다.
 
 ### 2.4 컨테이너화 및 배포 준비
 - Docker 최적화: ARM64 아키텍처(AWS t4g.micro 등)에 최적화된 멀티스테이지 Dockerfile을 작성하였습니다.
 - 빌드 검증: npm run build를 통해 전체 타입 체크 및 프로덕션 빌드 성공을 확인하였습니다.
 
 ## 3. 향후 과제
-- 레거시 프론트엔드의 UI 컴포넌트 및 페이지 로직을 Next.js 환경으로 이관.
-- 전역 상태 관리 및 테마 시스템(MUI 등) 적용 여부 결정 및 구현.
 - API Gateway와의 실환경 통합 테스트 수행.
+- 레거시 기능 중 미진한 세부 UI 인터랙션 검증.
+- 마이크로서비스 간 분산 세션 공유 및 보안 고도화.
 
 ---
 
