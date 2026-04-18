@@ -1,30 +1,36 @@
-# Last Work Summary (2026-04-06)
+# Last Work Summary (2026-04-18)
 
 ## 1. 개요
-인프라스트럭처의 배포 안정성 향상, 네트워크 최적화 및 모니터링 가시성 개선을 위한 고도화 작업을 진행하였습니다.
+Next.js 15 기반의 새로운 프론트엔드 BFF(Backend for Frontend)인 microservice-frontend 모듈을 초기화하고 핵심 인증 및 프록시 로직을 구현하였습니다.
 
 ## 2. 수행 작업 내용
 
-### 2.1 서비스 탐색 및 네트워크 최적화
-- Consul 버전 다운그레이드: 안정성 확보를 위해 시스템 전반의 Consul 버전을 1.15에서 1.14로 변경하였습니다.
-- 네트워크 모드 최적화: API Gateway 및 Control Plane의 Consul 설정에 network_mode: host를 적용하여 서비스 탐색의 안정성을 강화하였습니다.
-- 바인딩 인터페이스 명시: Amazon Linux 2023 환경에 맞춰 CONSUL_BIND_INTERFACE를 ens5로 고정하였습니다.
+### 2.1 Next.js 15 프로젝트 초기화
+- 프로젝트 생성: App Router와 TypeScript를 사용하는 Next.js 15 프로젝트를 microservice-frontend 디렉토리에 구축하였습니다.
+- 라이브러리 도입: JWT 서명 및 검증을 위해 jose 라이브러리를 설치하였습니다.
+- 환경 설정: 로컬 개발 및 런타임을 위한 .env.local.example 파일을 생성하고 standalone 빌드 모드를 활성화하였습니다.
 
-### 2.2 모니터링 및 로깅 가시성 개선
-- 권한 문제 해결: Grafana Alloy가 Docker 소켓에 정상적으로 접근할 수 있도록 alloy 사용자를 docker 그룹에 추가하였습니다.
-- 로그 레이블링: 컨테이너 로그가 올바른 서비스 이름(quietchatter-*)으로 그라파나에 분류되도록 relabeling 파이프라인을 전면 수정하였습니다.
+### 2.2 세션 관리 및 인증 아키텍처 구현
+- JWT 세션 시스템: HS256 알고리즘 기반의 JWT 발급 및 검증 로직을 src/lib/session.ts에 구현하였습니다. 세션은 qc_session 명칭의 httpOnly 쿠키로 관리됩니다.
+- 네이버 OAuth2 연동: 로그인 시작, 콜백 수신 및 CSRF 방지용 state 검증 로직을 포함한 인증 라우트를 구현하였습니다.
+- 미들웨어 보호: 인증이 필요한 경로(/my/*) 접근 시 세션을 검증하고 미인증 사용자를 로그인 페이지로 자동 유도하는 middleware.ts를 작성하였습니다.
 
-### 2.3 프로비저닝 안정화 및 IaC 코드 품질 향상
-- 프로비저닝 스크립트 개편: user_data 스크립트에 로깅 및 에러 핸들링을 도입하고, Docker 설치 시 패키지 매니저 캐시 초기화 및 재시도 로직을 추가하여 배포 성공률을 높였습니다.
-- 상태 지속성 확보: 인스턴스 재시작 후에도 시크릿(Grafana API Key, DB Password 등)이 유지되도록 환경 변수를 /home/ec2-user/.env에 지속 저장하도록 개선하였습니다.
-- 테라폼 코드 최적화: locals 블록을 활용하여 템플릿 렌더링 로직을 분리하고, 설정 변경 시 인스턴스가 자동 재생성되도록 user_data_replace_on_change = true를 적용하였습니다.
+### 2.3 API 프록시 및 게이트웨이 연동
+- 통합 프록시 라우트: 브라우저의 요청을 받아 세션에서 memberId를 추출하고, 이를 X-Member-Id 헤더에 주입하여 내부 API Gateway로 전달하는 프록시 로직을 구현하였습니다.
+- 게이트웨이 클라이언트: 내부 네트워크의 API Gateway와 통신을 담당하는 공통 fetch 래퍼 모듈을 작성하였습니다.
+
+### 2.4 컨테이너화 및 배포 준비
+- Docker 최적화: ARM64 아키텍처(AWS t4g.micro 등)에 최적화된 멀티스테이지 Dockerfile을 작성하였습니다.
+- 빌드 검증: npm run build를 통해 전체 타입 체크 및 프로덕션 빌드 성공을 확인하였습니다.
 
 ## 3. 향후 과제
-- Prometheus/Grafana를 활용한 서비스 메트릭 가시화.
-- 각 서비스 간의 통신(RestClient + LoadBalancer) 로직 구체화 및 견고성 확보.
-- 레거시 기능의 완전한 이관 및 통합 테스트 수행.
+- 레거시 프론트엔드의 UI 컴포넌트 및 페이지 로직을 Next.js 환경으로 이관.
+- 전역 상태 관리 및 테마 시스템(MUI 등) 적용 여부 결정 및 구현.
+- API Gateway와의 실환경 통합 테스트 수행.
 
 ---
+
+# Previous Work Summary (2026-04-06)
 
 # Previous Work Summary (2026-04-04)
 
