@@ -19,6 +19,8 @@
 - microservice-customer: 고객 센터 문의 접수 및 CS 업무 처리.
 
 ### 2.2 인프라 및 레거시 (Infrastructure & Legacy)
+- 모든 레거시 모듈은 읽기 전용(Read-only) 보관 상태입니다. 참조가 필요한 경우에만 활용하며 모든 새로운 개발은 마이크로서비스 모듈에서 진행합니다. 
+
 - infrastructure: Terraform 기반의 AWS 인프라 정의 및 Docker Compose 설정 관리.
 - legacy-modules: 기존 백엔드, 프론트엔드, 배치 시스템 및 문서 아카이브 참조용.
 
