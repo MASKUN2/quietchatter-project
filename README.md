@@ -11,7 +11,7 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 ### 주요 구성 요소
 - Network: VPC 내 퍼블릭/프라이빗 서브넷 분리 (ap-northeast-2)
 - NAT & Ingress Node: EC2 기반 NAT 구성 및 NGINX Ingress Docker 운영 (비용 절감형)
-- API Gateway: Spring Cloud Gateway 기반 microservice-gateway 운영 (JWT 검증 및 라우팅)
+- API Gateway: Spring Cloud Gateway 기반 microservice-api-gateway 운영 (JWT 검증 및 라우팅)
 - Persistence Node: 
   - Docker Compose 기반 관리: PostgreSQL 16, Redis 7, Redpanda (Kafka 호환), Consul Server
   - EBS 데이터 분리: 15GB 독립 EBS 볼륨을 /data에 마운트하여 인스턴스 재생성 시에도 데이터 안전 보장
@@ -37,7 +37,7 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 .
 ├── infrastructure/          # 테라폼 기반 인프라 정의 (IaC)
 ├── microservice-frontend/   # Next.js 15 기반 웹 프론트엔드 및 BFF
-├── microservice-gateway/    # Spring Cloud Gateway (라우팅 및 보안)
+├── microservice-api-gateway/    # Spring Cloud Gateway (라우팅 및 보안)
 ├── microservice-member/     # 회원 및 인증 마이크로서비스
 ├── microservice-book/       # 도서 정보 마이크로서비스
 ├── microservice-talk/       # 북톡 및 반응 마이크로서비스

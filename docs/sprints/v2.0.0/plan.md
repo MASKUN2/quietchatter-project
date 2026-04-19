@@ -8,7 +8,7 @@
 - Book Service: microservice-book/docs/tasks/v2.0.0-task.md
 - Talk Service: microservice-talk/docs/tasks/v2.0.0-task.md
 - Customer Service: microservice-customer/docs/tasks/v2.0.0-task.md
-- Gateway Service: microservice-gateway/docs/tasks/v2.0.0-task.md
+- Gateway Service: microservice-api-gateway/docs/tasks/v2.0.0-task.md
 
 ## 3. 통합 테스트 시나리오
 - (작성 대기 중)

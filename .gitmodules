@@ -19,9 +19,9 @@
 [submodule "legacy-quiet-chatter-docs"]
 	path = legacy-quiet-chatter-docs
 	url = https://github.com/MASKUN2/quiet-chatter-docs
-[submodule "microservice-gateway"]
-	path = microservice-gateway
-	url = https://github.com/MASKUN2/quietchatter-microservice-gateway
+[submodule "microservice-api-gateway"]
+        path = microservice-api-gateway
+        url = https://github.com/MASKUN2/quietchatter-microservice-gateway
 [submodule "microservice-talk"]
 	path = microservice-talk
 	url = https://github.com/MASKUN2/quietchatter-microservice-talk

@@ -24,7 +24,7 @@ QuietChatter는 내향적인 독자들을 위한 저자극 도서 공유 SNS 플
 
 모놀리식 레거시를 MSA로 전환하는 프로젝트입니다. 각 마이크로서비스는 독립된 Git 서브모듈로 관리됩니다.
 
-- microservice-gateway: 단일 진입점. Spring Cloud Gateway로 JWT 검증 및 라우팅 처리
+- microservice-api-gateway: 단일 진입점. Spring Cloud Gateway로 JWT 검증 및 라우팅 처리
 - microservice-member: 회원가입, 인증/인가(OAuth), JWT 발급
 - microservice-book: 외부 도서 API 연동 및 캐싱
 - microservice-talk: 북톡(대화), 반응 처리 및 비즈니스 자동화
