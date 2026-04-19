@@ -32,6 +32,14 @@ QuietChatter는 내향적인 독자들을 위한 저자극 도서 공유 SNS 플
 - infrastructure: Terraform 기반 AWS 인프라 (계층 구조 01~05)
 - legacy-*: 참조용 아카이브 (수정 금지)
 
+## 레거시 서브모듈 사용 규칙
+
+legacy-quiet-chatter, legacy-quiet-chatter-front-end, legacy-quiet-chatter-batch, legacy-quiet-chatter-docs는 모두 archive 상태입니다.
+
+- 읽기 전용으로만 사용합니다. 어떤 경우에도 파일을 수정하거나 커밋하지 마십시오.
+- 마이크로서비스 포팅 시 비즈니스 로직, 패키지 구조, 테스트 패턴의 참조 소스로 활용합니다.
+- 레거시 코드를 그대로 복사하지 말고, idiomatic Kotlin으로 재작성하십시오.
+
 ## 빌드 및 테스트 명령
 
 각 마이크로서비스 폴더에서 실행합니다.
