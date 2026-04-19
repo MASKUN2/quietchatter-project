@@ -42,7 +42,12 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 ├── microservice-book/       # 도서 정보 마이크로서비스
 ├── microservice-talk/       # 북톡 및 반응 마이크로서비스
 ├── microservice-customer/   # 고객 지원 마이크로서비스
+├── legacy-quiet-chatter/    # (Archive) 레거시 자바 백엔드 (참조용)
+├── legacy-quiet-chatter-front-end/ # (Archive) 레거시 리액트 프론트 (참조용)
+└── legacy-quiet-chatter-docs/ # (Archive) 레거시 기획/정책 문서 (참조용)
 ```
+
+**주의:** `legacy-`로 시작하는 모든 폴더는 보관(Archive) 상태입니다. 새로운 마이크로서비스 구현을 위한 로직 참조용으로만 사용하며, 직접적인 코드 수정이나 커밋은 엄격히 금지됩니다.
 
 ## 개발 지침 및 문서 (Documentation)
 

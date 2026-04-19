@@ -15,30 +15,30 @@
 각 서브모듈(microservice-*, infrastructure) 작업 시 해당 폴더 내부의 AGENTS.md를 추가로 확인하여 도메인별 특화 규칙을 준수하십시오.
 
 ## 2. 핵심 행동 및 작업 지침
-### 2.6 레거시 모듈 활용 지침 (Legacy/Archive) 
-- legacy-로 시작하는 모든 서브모듈은 보관(Archive) 상태입니다. 
-- 모든 레거시 코드는 로직 참조용으로만 사용하며, 직접적인 수정이나 커밋을 엄격히 금지합니다. 
 
+### 2.1 레거시 모듈 활용 지침 (Legacy/Archive - READ ONLY)
+- legacy-로 시작하는 모든 서브모듈은 보관(Archive) 상태입니다.
+- 모든 레거시 코드는 로직 참조용으로만 사용하며, 직접적인 수정이나 파일 생성, 커밋을 엄격히 금지합니다.
 
-### 2.1 문서 및 소통 스타일 (Strict Style Rule)
+### 2.2 문서 및 소통 스타일 (Strict Style Rule)
 - 모든 문서 작성 및 답변 시 강조 서식(굵게, 기울임, 표 등)과 이모티콘 사용을 절대 금지합니다.
 - 오직 평문(Plain Text)만 사용하며 명확하고 전문적인 어조를 유지합니다.
 
-### 2.2 의사결정 원칙
+### 2.3 의사결정 원칙
 - 업계 표준(Proven & Mature) 기술을 우선 선정합니다.
 - 여러 대안 대신 프로젝트 상황에 최적화된 단일 최적 경로(Single Path)를 제안합니다.
 
-### 2.3 Superpowers 스킬 활용 (Mandatory Skill Usage)
+### 2.4 Superpowers 스킬 활용 (Mandatory Skill Usage)
 - 모든 작업 시작 전 및 작업 중에 superpowers 스킬 목록을 항상 확인하고 상황에 맞는 스킬을 활성화하여 사용하십시오.
 - 특히 using-superpowers 스킬에 명시된 절차와 규칙을 최우선으로 준수하여 작업의 일관성과 품질을 유지하십시오.
 
-### 2.4 기술 스택 및 아키텍처
+### 2.5 기술 스택 및 아키텍처
 - 모든 서비스는 헥사고날 아키텍처를 따르며, 어댑터 패키지 명칭은 adaptor로 통일합니다.
 - 백엔드: Kotlin 1.9.x, Spring Boot 3.5.13, Java 21 (Virtual Threads), Redpanda (Kafka 호환), Consul.
 - 프론트엔드: Next.js 15 (App Router), TypeScript, MUI v6, Tailwind CSS.
 - 인프라: AWS (t4g), Terraform.
 
-### 2.5 Git 커밋 지침
+### 2.6 Git 커밋 지침
 - 작업 중 논리적으로 완결된 변경 사항이 발생할 때마다 해당 단위별로 커밋을 수행하십시오.
 - 하나의 커밋에는 서로 다른 목적의 변경 사항을 섞지 않으며, 명확한 의도를 담은 커밋 메시지를 작성하십시오.
 
