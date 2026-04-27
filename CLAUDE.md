@@ -29,7 +29,7 @@ QuietChatter는 내향적인 독자들을 위한 저자극 도서 공유 SNS 플
 - microservice-book: 외부 도서 API 연동 및 캐싱
 - microservice-talk: 북톡(대화), 반응 처리 및 비즈니스 자동화
 - microservice-customer: 고객 센터 문의 및 CS 처리
-- infrastructure: Terraform 기반 AWS 인프라 (계층 구조 01~05)
+- infrastructure: Terraform 기반 AWS 인프라 (계층 구조 01~03)
 - legacy-*: 참조용 아카이브 (수정 금지)
 
 ## 레거시 서브모듈 사용 규칙
@@ -125,7 +125,7 @@ terraform plan
 terraform apply
 ```
 
-계층 실행 순서: 01-base → 02-network-services → 03-platform → 04-apps-gateway → 05-apps-microservices
+계층 실행 순서: 01-base → 02-platform → 03-apps
 
 ## 문서 작성 규칙
 

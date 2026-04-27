@@ -13,10 +13,9 @@
 ### 2.1 마이크로서비스 (Microservices)
 - microservice-frontend: 사용자 진입점(Entry Point). Next.js 15 기반의 웹 프론트엔드이자 BFF(Backend for Frontend) 역할을 수행하며, 세션 관리 및 API 프록시 기능을 담당합니다.
 - microservice-api-gateway: 내부망 라우팅의 단일 진입점. Spring Cloud Gateway 기반의 라우팅 및 통합 보안(JWT 검증) 처리.
-- microservice-member: 회원 가입, 인증/인가(OAuth), 프로필 및 권한 관리.
+- microservice-member: 회원 가입, 인증/인가(OAuth), 프로필 및 권한 관리, 그리고 고객 센터 문의 접수 및 CS 업무 처리(기존 microservice-customer 통합).
 - microservice-book: 외부 도서 API 연동 및 책 정보 캐싱.
 - microservice-talk: 회원 간 대화, 반응(좋아요 등) 처리 및 비즈니스 자동화.
-- microservice-customer: 고객 센터 문의 접수 및 CS 업무 처리.
 
 ### 2.2 인프라 및 레거시 (Infrastructure & Legacy)
 - 모든 레거시 모듈은 읽기 전용(Read-only) 보관 상태입니다. 참조가 필요한 경우에만 활용하며 모든 새로운 개발은 마이크로서비스 모듈에서 진행합니다. 
