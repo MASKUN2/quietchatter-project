@@ -38,16 +38,59 @@ quietchatter-project는 마이크로서비스 아키텍처(MSA) 기반의 효율
 ├── infrastructure/          # 테라폼 기반 인프라 정의 (IaC)
 ├── microservice-frontend/   # Next.js 15 기반 웹 프론트엔드 및 BFF
 ├── microservice-api-gateway/    # Spring Cloud Gateway (라우팅 및 보안)
-├── microservice-member/     # 회원 및 인증 마이크로서비스
+├── microservice-member/     # 회원, 인증 및 고객 지원(Support) 마이크로서비스
 ├── microservice-book/       # 도서 정보 마이크로서비스
 ├── microservice-talk/       # 북톡 및 반응 마이크로서비스
-├── microservice-customer/   # 고객 지원 마이크로서비스
 ├── legacy-quiet-chatter/    # (Archive) 레거시 자바 백엔드 (참조용)
 ├── legacy-quiet-chatter-front-end/ # (Archive) 레거시 리액트 프론트 (참조용)
 └── legacy-quiet-chatter-docs/ # (Archive) 레거시 기획/정책 문서 (참조용)
 ```
 
 **주의:** `legacy-`로 시작하는 모든 폴더는 보관(Archive) 상태입니다. 새로운 마이크로서비스 구현을 위한 로직 참조용으로만 사용하며, 직접적인 코드 수정이나 커밋은 엄격히 금지됩니다.
+
+## API 명세 및 경로 표준화 (API Path Standardization)
+
+본 프로젝트는 서비스 간 결합도를 낮추고 일관된 접근을 위해 리소스 중심의 API 경로 표준을 따릅니다. 모든 요청은 `/api` 접두사로 시작하며, 버전 관리는 URL이 아닌 헤더를 통해 수행합니다.
+
+### 1. 표준 API 경로 매핑
+
+| 리소스 (Resource) | 담당 서비스 | 경로 패턴 (Path Pattern) |
+| :--- | :--- | :--- |
+| **인증 (Auth)** | `microservice-member` | `/api/auth/**` |
+| **회원 (Members)** | `microservice-member` | `/api/members/**` |
+| **고객지원 (Support)** | `microservice-member` | `/api/support/**` |
+| **도서 (Books)** | `microservice-book` | `/api/books/**` |
+| **북톡 (Talks)** | `microservice-talk` | `/api/talks/**` |
+| **반응 (Reactions)** | `microservice-talk` | `/api/reactions/**` |
+
+### 2. 버전 관리 전략
+- **헤더 기반 버전 관리**: `X-API-Version` 헤더를 사용합니다. (기본값: `1`)
+- **버전 표기**: 정수 형태 (예: `1`, `2`)를 사용하며, URL 경로에는 `v1`, `v2` 등을 포함하지 않습니다.
+
+### 3. API 스펙 관리 전략 (Test-Driven Documentation)
+본 프로젝트는 코드와 문서의 불일치를 방지하기 위해 **테스트 주도 문서화** 방식을 채택합니다.
+
+-   **Spring RestDocs + OpenAPI 3.0**: 모든 API는 컨트롤러 테스트(JUnit 5)를 통해 실제 동작이 검증된 경우에만 문서화됩니다. `testDocs` 태스크 실행 시 `epages restdocs-api-spec`을 통해 `openapi3.yaml` 파일이 자동 생성됩니다.
+-   **실시간 스펙 제공**: 각 서비스는 `/api/{resource}/spec` 경로를 통해 최신 OpenAPI 스펙을 제공하며, 이는 API Gateway를 통해 통합 조회 및 문서 도구(Swagger UI 등) 연동에 사용됩니다.
+-   **단일 진입점 (Aggregator)**: 프론트엔드 개발자의 편의를 위해 API Gateway에서 모든 마이크로서비스의 스펙을 하나로 병합하여 제공합니다.
+    -   **통합 스펙 주소**: `GET /api/docs/openapi.yaml` (YAML 형식)
+    -   **특징**: 서비스 간 모델명 충돌 방지를 위해 각 스키마에 서비스 접두어(예: `Member_`, `Book_`)가 자동으로 부여됩니다.
+
+## CI/CD 및 배포 전략 (S3 Bridge Pattern)
+
+본 프로젝트는 소규모 MSA 환경에 최적화된 **S3 Bridge 패턴(GitOps-lite)**을 통해 배포를 자동화합니다. 각 서비스는 독립된 저장소에서 관리되지만, S3를 매개체로 하여 중앙 집중식 배포 제어를 달성합니다.
+
+### 1. 배포 흐름 (Deployment Flow)
+1.  **이미지 빌드**: 개발자가 코드를 `main` 브랜치에 푸시하면 GitHub Actions가 트리거되어 최신 Docker 이미지를 빌드합니다.
+2.  **SHA 태그 생성**: 빌드된 이미지에는 Git 커밋 해시(SHA) 기반의 고유 태그가 부여됩니다 (예: `sha-a1b2c3d`).
+3.  **매니페스트 자동 업데이트**: GitHub Actions가 서비스 내부의 `k8s/deployment.yaml` 파일을 읽어 이미지 태그를 방금 생성한 SHA로 자동 치환합니다.
+4.  **S3 브릿지 전송**: 수정된 매니페스트를 중앙 S3 버킷(`quietchatter-infra-assets`)의 지정된 경로로 업로드합니다.
+5.  **자동 동기화**: 쿠버네티스 Controlplane 노드에서 5분마다 실행되는 `sync.sh` 스크립트가 S3의 변경 사항을 감지하고 `kubectl apply`를 통해 클러스터에 반영합니다.
+
+### 2. 주요 장점
+-   **독립적 자치권**: 각 마이크로서비스는 인프라 저장소에 대한 접근 권한 없이도 자신의 S3 경로를 통해 안전하게 배포를 진행할 수 있습니다.
+-   **추적성**: 모든 배포 파일이 Git 커밋 SHA를 태그로 사용하므로, 운영 환경에 떠 있는 코드가 어떤 버전인지 즉시 확인이 가능합니다.
+-   **안정성**: 중앙에서 `sync.sh`를 통해 모든 매니페스트를 통합 관리하므로 설정의 일관성을 유지할 수 있습니다.
 
 ## 개발 지침 및 문서 (Documentation)
 
