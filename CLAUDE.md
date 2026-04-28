@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+- 각 서브모듈에 있는 CLAUDE.md가 있으면 참조하십시오. 
+
 ## 필독 문서 (작업 전 순서대로 확인)
 
 1. docs/requirements/prd.md - 제품 목적 및 기능 요구사항
