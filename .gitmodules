@@ -11,7 +11,7 @@
 	path = legacy-quiet-chatter
 	url = https://github.com/MASKUN2/quiet-chatter
 [submodule "legacy-quiet-chatter-front-end"]
-	path = legacy-quiet-chatter-front-end
+	path = frontend
 	url = https://github.com/MASKUN2/quiet-chatter-front-end
 [submodule "legacy-quiet-chatter-batch"]
 	path = legacy-quiet-chatter-batch
