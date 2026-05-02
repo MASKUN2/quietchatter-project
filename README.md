@@ -165,6 +165,9 @@ API 문서화:
 - 에러 핸들링 표준화: 전 백엔드 서비스에 RFC 7807 (ProblemDetail) 도입.
 - 데이터 정합성 강화: Talk 작성 시 Member 정보를 동기 조회(Feign)하여 스냅샷 저장 및 Kafka 기반 프로필 변경 이벤트 전파 구현.
 - 보안 강화: API Gateway에서 `/internal/**` 경로에 대한 외부 접근 차단 필터 적용.
+- 시크릿 통합: AWS Secrets Manager 9개 개별 시크릿을 단일 JSON 시크릿(quietchatter-secrets)으로 통합. Secrets Manager 비용 $3.60 → $0.40/월. sync.sh에서 jq로 파싱 후 k8s Secret 오브젝트로 변환하는 기존 주입 방식 유지.
+- 내부 서비스 통신 보안: X-Internal-Secret 헤더 기반 인증 적용. Talk 서비스가 Member 내부 API 호출 시 공유 시크릿 헤더를 전송하며, Member 서비스에서 헤더 값 검증 후 불일치 시 403 반환.
+- 시크릿 주입 방식 일원화: microservice-member에서 Spring Cloud AWS Secrets Manager 직접 조회(spring.config.import) 방식 제거. 모든 시크릿을 sync.sh → k8s Secret → env var 단일 경로로 통일. 관련 의존성(spring-cloud-aws-starter-secrets-manager) 제거.
 
 ### 2026-04-29
 - controlplane (t4g.small): k3s server, Redis, Redpanda
