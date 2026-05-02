@@ -49,6 +49,7 @@ quietchatter-project/
   microservice-member/        회원 인증(OAuth), JWT 발급, 고객 문의
   microservice-book/          외부 도서 API 연동 및 캐싱
   microservice-talk/          북톡(대화), 반응 처리 및 자동화
+  frontend/                   웹 프론트엔드 (React, Zustand)
   infrastructure/             Terraform 기반 AWS 인프라 (k3s 클러스터)
   legacy-*/                   참조용 아카이브 (수정 금지)
 ```
@@ -69,14 +70,14 @@ Gateway에서 JWT를 중앙 검증합니다. 검증된 회원 ID를 X-Member-Id 
 
 ### 서비스 간 통신
 
-동기: Spring RestClient + k8s DNS(service.namespace.svc.cluster.local)
+동기: Spring Cloud OpenFeign + k8s DNS(service.namespace.svc.cluster.local)
 비동기: Redpanda(Kafka 호환) + Spring Cloud Stream. 이벤트 발행은 반드시 트랜잭셔널 아웃박스 패턴 적용.
 
 메시지 규칙:
 - 토픽명: {도메인명} 형식 (예: member). 세부 이벤트 타입은 메시지 본문의 evt_type 필드에 명시.
 - 직렬화: 평면화된 JSON(Flattened JSON). 메타데이터 필드에 evt_ 접두사 사용.
 - 메시지 키: 엔티티 ID 사용 (순서 보장).
-- 최종 실패 시 {토픽명}.dlq로 격리.
+- 최종 실패 시 {도메인}.dlq로 격리.
 
 ### 헥사고날 아키텍처 패키지 구조
 
@@ -89,12 +90,12 @@ com.quietchatter.{service}/
     in/             유스케이스 Port 인터페이스
     out/            외부 연동 Port 인터페이스
   adaptor/
-    in/web/         RestController, DTO
+    in/web/         RestController, DTO, GlobalExceptionHandler
     in/messaging/   Kafka Consumer
     in/scheduler/   스케줄러
     out/persistence/ JPA Repository 구현체
     out/outbox/     트랜잭셔널 아웃박스 구현체
-    out/external/   외부 API 클라이언트
+    out/external/   외부 API 클라이언트 (Feign)
   config/           설정 분리
 ```
 
@@ -105,7 +106,8 @@ com.quietchatter.{service}/
 ## 5. 기술 스택 및 개발 규칙
 
 기술 스택:
-- Backend: Kotlin + Spring Boot 3 + JDK 21 Virtual Threads
+- Backend: Kotlin + Spring Boot 3 + JDK 21 Virtual Threads + OpenFeign
+- Frontend: React 19 + TypeScript + Zustand + MUI 6
 - API Gateway: Spring Cloud Gateway MVC (WebFlux/Reactive 사용 금지)
 - Messaging: Redpanda + Spring Cloud Stream
 - Database: PostgreSQL (서비스별 독립 DB) + Redis
@@ -123,16 +125,17 @@ Kotlin 규칙:
 - !! 사용 지양. 안전 연산자(?., ?:) 사용.
 - 패키지명은 소문자 + 케밥케이스 조합.
 
+에러 핸들링:
+- RFC 7807 (Problem Details for HTTP APIs) 표준 준수.
+- @RestControllerAdvice를 통한 전역 예외 처리.
+
 API 문서화:
 - Spring RestDocs + restdocs-api-spec으로 테스트 통과 시에만 문서 생성.
 - 문서 생성 테스트에는 @Tag("restdocs") 적용.
 - 각 서비스는 /api/v1/spec 엔드포인트로 최신 OpenAPI YAML 스펙 제공.
-
----
-
 ## 6. API 경로 표준
 
-모든 요청은 /api 접두사로 시작합니다. URL에 버전 정보를 포함하지 않습니다.
+모든 요청은 /api 접두사로 시작합니다. URL에 버전 정보를 포함하지 않습니다. 내부 서비스 간 통신은 /internal 접두사를 사용하며 Gateway에서 외부 접근이 차단됩니다.
 
 | 리소스 | 담당 서비스 | 경로 패턴 |
 | --- | --- | --- |
@@ -142,13 +145,28 @@ API 문서화:
 | 도서 | microservice-book | /api/books/** |
 | 북톡 | microservice-talk | /api/talks/** |
 | 반응 | microservice-talk | /api/reactions/** |
+| 내부 통신 | 각 서비스 | /internal/** |
 
 ---
 
 ## 7. 인프라 구성
+...
+---
 
-AWS 서울 리전(ap-northeast-2) k3s 클러스터. 3노드 구성.
+## 9. 작업 이력
 
+### 2026-05-02
+
+시스템 전반 고도화 및 아키텍처 정렬:
+- 서브모듈 이름 변경: `legacy-quiet-chatter-front-end` -> `frontend` (현대화 및 활성화).
+- API 경로 및 메서드 정렬: 모든 API를 `/api` 기반으로 통일, 톡 수정 메서드를 `PUT`으로 정렬.
+- 프론트엔드 상태 관리 전환: Context API에서 Zustand로 마이그레이션 (`useAuthStore`, `useToastStore`).
+- 프론트엔드 API 모듈화: `api.ts`를 도메인별 모듈(`auth`, `books`, `talks`, `support`)로 분리.
+- 에러 핸들링 표준화: 전 백엔드 서비스에 RFC 7807 (ProblemDetail) 도입.
+- 데이터 정합성 강화: Talk 작성 시 Member 정보를 동기 조회(Feign)하여 스냅샷 저장 및 Kafka 기반 프로필 변경 이벤트 전파 구현.
+- 보안 강화: API Gateway에서 `/internal/**` 경로에 대한 외부 접근 차단 필터 적용.
+
+### 2026-04-29
 - controlplane (t4g.small): k3s server, Redis, Redpanda
 - gateway (t4g.micro, 퍼블릭, EIP): NGINX, api-gateway
 - worker ASG (t4g.small, Spot, min=1/max=3): member, book, talk
