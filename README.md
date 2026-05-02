@@ -147,10 +147,9 @@ API 문서화:
 
 ## 7. 인프라 구성
 
-AWS 서울 리전(ap-northeast-2) k3s 클러스터. 4노드 구성.
+AWS 서울 리전(ap-northeast-2) k3s 클러스터. 3노드 구성.
 
-- controlplane (t4g.micro): k3s server, Redis
-- platform (t4g.micro): Redpanda
+- controlplane (t4g.small): k3s server, Redis, Redpanda
 - gateway (t4g.micro, 퍼블릭, EIP): NGINX, api-gateway
 - worker ASG (t4g.small, Spot, min=1/max=3): member, book, talk
 
