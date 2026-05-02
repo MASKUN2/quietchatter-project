@@ -18,6 +18,15 @@
 ./gradlew bootJar
 ```
 
+프론트엔드 폴더에서 실행합니다.
+
+```
+npm install
+npm run dev
+npm run build
+npm run lint
+```
+
 ## 핵심 작업 규칙
 
 서비스 탐색: Consul 사용 금지. k8s DNS(service.namespace.svc.cluster.local) 사용.
