@@ -159,8 +159,14 @@ Rolling Update 전략: 단일 Worker 노드 환경이므로 maxSurge: 0, maxUnav
 
 ### 2026-05-03
 
-이벤트 소비 버그 수정:
+이벤트 소비 버그 수정 및 CloudEvents 1.0 표준 전환:
 - 톡 서비스 회원 이벤트 컨슈머 수정: Consumer<Message<String>>을 Consumer<String>으로 변경. Spring Cloud Stream 4.x에서 Consumer<Message<String>>은 네이티브 메시지 핸들러로 간주되어 Kafka 채널 바인딩이 생성되지 않는 문제 해결.
+- 근본 원인 수정: spring.cloud.function.autodetect: false 설정이 FunctionCatalog 등록을 막아 컨슈머 그룹이 Dead 상태로 유지되던 문제 제거.
+- CloudEvents 1.0 표준 전환: member/talk 양 서비스의 통합 이벤트 포맷을 CloudEvents 1.0(specversion, id, source, type, time, subject, datacontenttype, data)으로 통일. 시각 필드는 RFC 3339(ZoneOffset.UTC) 형식 적용.
+- 불필요 코드 제거: TalkEventDto(미사용 dead code) 삭제.
+- Outbox 정리 Job 추가: 7일 이상 경과한 처리 완료 이벤트를 매시간 삭제하는 스케줄러를 member/talk 양 서비스에 추가.
+- TalkHiddenEvent 페이로드 직렬화 개선: 문자열 보간 대신 ObjectMapper를 사용하여 안전하게 JSON 직렬화.
+- Outbox 포트 패턴 일관성: member 서비스에 OutboxEventPersistable 포트 인터페이스를 도입하고 MemberService/OutboxRelayService가 리포지토리 직접 의존 대신 포트를 통해 통신하도록 리팩토링.
 
 ### 2026-05-02
 
