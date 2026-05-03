@@ -157,6 +157,11 @@ Rolling Update 전략: 단일 Worker 노드 환경이므로 maxSurge: 0, maxUnav
 
 ## 9. 작업 이력
 
+### 2026-05-03
+
+이벤트 소비 버그 수정:
+- 톡 서비스 회원 이벤트 컨슈머 수정: Consumer<Message<String>>을 Consumer<String>으로 변경. Spring Cloud Stream 4.x에서 Consumer<Message<String>>은 네이티브 메시지 핸들러로 간주되어 Kafka 채널 바인딩이 생성되지 않는 문제 해결.
+
 ### 2026-05-02
 
 시스템 전반 고도화 및 기술 부채 청산:
