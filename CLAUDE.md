@@ -2,7 +2,7 @@
 
 작업 전 README.md를 읽으십시오. 제품 정의, 아키텍처 원칙, 기술 스택, API 경로, 배포 방식, 작업 이력은 README.md에 있습니다.
 
-작업 대상 서비스의 CLAUDE.md도 읽으십시오.
+작업 대상 서브모듈의 CLAUDE.md도 읽으십시오. 서브모듈에는 microservice-*, infrastructure, frontend 등이 포함됩니다.
 
 ## 빌드 및 테스트 명령
 
