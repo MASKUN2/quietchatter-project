@@ -3,3 +3,4 @@ docs/api-spec/
 .obsidian/
 .claude/settings.local.json
 .worktrees/
+.idea/
