@@ -7,18 +7,9 @@
 [submodule "infrastructure"]
 	path = infrastructure
 	url = https://github.com/MASKUN2/quietchatter-infrastructure.git
-[submodule "legacy-quiet-chatter"]
-	path = legacy-quiet-chatter
-	url = https://github.com/MASKUN2/quiet-chatter
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/MASKUN2/quietchatter-frontend
-[submodule "legacy-quiet-chatter-batch"]
-	path = legacy-quiet-chatter-batch
-	url = https://github.com/MASKUN2/quiet-chatter-batch
-[submodule "legacy-quiet-chatter-docs"]
-	path = legacy-quiet-chatter-docs
-	url = https://github.com/MASKUN2/quiet-chatter-docs
 [submodule "microservice-api-gateway"]
         path = microservice-api-gateway
         url = https://github.com/MASKUN2/quietchatter-microservice-api-gateway
