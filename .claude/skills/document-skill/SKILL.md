@@ -14,4 +14,4 @@ Each (sub)module root must contain exactly three markdown files.
 No emphasis formatting (bold, italic) and no emojis.
 
 ## Content
-Keep documentation consistent with the code.
+Keep documentations consistent with the code.
