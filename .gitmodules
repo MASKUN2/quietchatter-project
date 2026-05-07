@@ -19,3 +19,6 @@
 [submodule "test-rust-api"]
 	path = test-rust-api
 	url = https://github.com/MASKUN2/test-rust-api.git
+[submodule "test-python-api"]
+	path = test-python-api
+	url = https://github.com/MASKUN2/test-python-api.git
