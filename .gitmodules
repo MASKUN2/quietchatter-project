@@ -16,3 +16,6 @@
 [submodule "microservice-talk"]
 	path = microservice-talk
 	url = https://github.com/MASKUN2/quietchatter-microservice-talk
+[submodule "test-rust-api"]
+	path = test-rust-api
+	url = https://github.com/MASKUN2/test-rust-api.git
