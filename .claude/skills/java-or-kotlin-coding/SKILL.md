@@ -1,6 +1,6 @@
 ---
 name: java | kotlin coding
-description: Use when you are about coding java | kotlin.
+description: Use when you are about to write kotlin | java code.
 ---
 
 # Rules
