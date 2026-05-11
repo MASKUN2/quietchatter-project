@@ -157,6 +157,17 @@ Rolling Update 전략: 단일 Worker 노드 환경이므로 maxSurge: 0, maxUnav
 
 ## 9. 작업 이력
 
+### 2026-05-10
+
+마이페이지 숨겨진 북톡 조회 및 숨김 해제:
+- 숨겨진 톡 조회 API: `GET /api/talks?memberId=...&hidden=true` 추가. `hidden=true` 요청 시 본인이 아닌 경우 403 반환.
+- 숨김 해제 API: `POST /api/talks/{talkId}/restore` 추가. 해제 시 `isHidden = false`, `dateToHidden = 오늘 + 12개월`로 재설정.
+- 도메인 서비스 `TalkOwnershipService` 신규 도입: hide/restore/updateContent 행위자별 처리 통합. `verifyOwner` private 메서드 제거.
+- `ForbiddenException` 도입 및 `GlobalExceptionHandler`에서 403 변환 처리.
+- 포트 분리: `getVisibleTalksByMember` / `getHiddenTalksByMember`로 명확히 분리.
+- 프론트엔드 마이페이지에 "공개" / "숨겨진" 탭 추가. 숨겨진 탭에서 숨김 해제 버튼 제공.
+- 통합 테스트: `@EmbeddedKafka` + `@MockitoBean(MemberClient)` 조합으로 7개 시나리오 검증.
+
 ### 2026-05-03
 
 이벤트 소비 버그 수정 및 CloudEvents 1.0 표준 전환:
